@@ -5514,7 +5514,7 @@ function mountStaticLogos(){
 }
 async function loadPokemonCatalog() {
   try {
-    const response = await fetch('./data/pokemon_cards.json');
+    const response = await fetch('./pokemon_cards.json');
     const cards = await response.json();
 
     CATALOG = cards;
