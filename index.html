@@ -3188,19 +3188,29 @@ function shuffle(arr){
 }
 
 function seedFeed(kind){
-  const pokemonOnly = CATALOG.filter(card => card.img && card.name && card.set);
+  const usableCards = CATALOG.filter(card => card && card.id && card.name && card.img);
 
-  const shuffled = shuffle(pokemonOnly).slice(0, kind === 'buy' ? 40 : 30);
+  const sampleSize = kind === 'buy' ? 14 : 13;
+  const cards = shuffle(usableCards).slice(0, sampleSize);
 
-  return shuffled.map(card => {
+  return cards.map(card => {
     const tags = [];
 
-    const year = parseInt(String(card.releaseDate || '').slice(0, 4), 10);
-    if (!isNaN(year) && year < 2010) tags.push('Vintage');
-    else tags.push('Modern');
+    if (
+      card.set === 'Base Set' ||
+      card.set === 'Fossil' ||
+      card.set === 'Jungle' ||
+      card.set === 'Team Rocket' ||
+      card.set === 'Neo Genesis'
+    ) {
+      tags.push('Vintage');
+    } else {
+      tags.push('Modern');
+    }
 
-    if (card.print === 'Holo' || card.print === 'Reverse Holo') tags.push(card.print);
-    if (!tags.length) tags.push('Pokemon');
+    if (card.condition && card.condition.includes('PSA')) {
+      tags.push('Graded');
+    }
 
     return buildIntent(card, card.condition || 'Raw', tags);
   });
