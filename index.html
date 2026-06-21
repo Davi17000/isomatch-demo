@@ -3065,7 +3065,7 @@ function navLogoHTML(){
    placeholder, synthetic, or generic cards are used.
    Each row's Condition is fixed exactly as provided in the CSV.
 ---------------------------------------------------------- */
-const CATALOG = [
+let CATALOG = [
   { id:'c1', name:'Charizard', set:'Base Set', num:'#4/102', condition:'PSA 9', tcgId:'base1-4', img:'https://images.pokemontcg.io/base1/4_hires.png', prints:{ default:'Holo', alts:[] } },
   { id:'c2', name:'Blastoise', set:'Base Set', num:'#2/102', condition:'PSA 9', tcgId:'base1-2', img:'https://images.pokemontcg.io/base1/2_hires.png', prints:{ default:'Holo', alts:[] } },
   { id:'c3', name:'Venusaur', set:'Base Set', num:'#15/102', condition:'PSA 9', tcgId:'base1-15', img:'https://images.pokemontcg.io/base1/15_hires.png', prints:{ default:'Holo', alts:[] } },
@@ -5537,9 +5537,26 @@ function mountStaticLogos(){
   const feedGlyph = document.getElementById('feedEmptyGlyph');
   if(feedGlyph) feedGlyph.innerHTML = logoMarkSVG({ size: 30, mono: true, showLens: false });
 }
-mountStaticLogos();
+async function loadPokemonCatalog() {
+  try {
+    const response = await fetch('./data/pokemon_cards.json');
+    const cards = await response.json();
 
-renderStack();
+    CATALOG = cards;
+
+    state.feeds.buy = seedFeed('buy');
+    state.feeds.sell = seedFeed('sell');
+
+    console.log(`Loaded ${CATALOG.length} Pokemon cards`);
+  } catch (error) {
+    console.error('Could not load Pokemon catalog. Falling back to built-in demo cards.', error);
+  }
+
+  mountStaticLogos();
+  renderStack();
+}
+
+loadPokemonCatalog();
 
 })();
 </script>
