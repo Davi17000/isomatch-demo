@@ -3188,6 +3188,23 @@ function shuffle(arr){
 }
 
 function seedFeed(kind){
+  const pokemonOnly = CATALOG.filter(card => card.img && card.name && card.set);
+
+  const shuffled = shuffle(pokemonOnly).slice(0, kind === 'buy' ? 40 : 30);
+
+  return shuffled.map(card => {
+    const tags = [];
+
+    const year = parseInt(String(card.releaseDate || '').slice(0, 4), 10);
+    if (!isNaN(year) && year < 2010) tags.push('Vintage');
+    else tags.push('Modern');
+
+    if (card.print === 'Holo' || card.print === 'Reverse Holo') tags.push(card.print);
+    if (!tags.length) tags.push('Pokemon');
+
+    return buildIntent(card, card.condition || 'Raw', tags);
+  });
+}
   // Built entirely from the uploaded CSV catalog. Each card's condition is
   // used exactly as provided — never reassigned. Buy and Sell draw from
   // disjoint card identities so a single card never appears in both feeds.
