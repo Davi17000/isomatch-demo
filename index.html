@@ -3215,58 +3215,6 @@ function seedFeed(kind){
     return buildIntent(card, card.condition || 'Raw', tags);
   });
 }
-  // Built entirely from the uploaded CSV catalog. Each card's condition is
-  // used exactly as provided — never reassigned. Buy and Sell draw from
-  // disjoint card identities so a single card never appears in both feeds.
-  // A few cards are deliberately duplicated (same card id + condition) to
-  // model multiple traders independently seeking the same card, which is
-  // what V3 duplicate suppression and opportunity propagation are for.
-  // Tags reflect each card's real set era (Vintage for Base Set/Fossil/
-  // Jungle/Team Rocket/Neo Genesis, Modern for the Sword & Shield era) plus
-  // Graded, since every row in the dataset is professionally graded.
-  const picks = kind === 'buy'
-    ? [
-        ['c11', ['Modern','Graded']],  // Umbreon VMAX PSA 10
-        ['c11', ['Modern','Graded']],
-        ['c11', ['Modern','Graded']],
-        ['c1',  ['Vintage','Graded']], // Charizard PSA 9
-        ['c10', ['Vintage','Graded']], // Lugia PSA 8
-        ['c19', ['Modern','Graded']],  // Gengar VMAX PSA 10
-        ['c19', ['Modern','Graded']],
-        ['c12', ['Modern','Graded']],  // Rayquaza VMAX PSA 10
-        ['c2',  ['Vintage','Graded']], // Blastoise PSA 9
-        ['c17', ['Modern','Graded']],  // Giratina V PSA 10
-        ['c17', ['Modern','Graded']],
-        ['c4',  ['Vintage','Graded']], // Mewtwo PSA 9
-        ['c13', ['Modern','Graded']],  // Sylveon VMAX PSA 10
-        ['c7',  ['Vintage','Graded']]  // Dragonite PSA 9
-      ]
-    : [
-        ['c3',  ['Vintage','Graded']], // Venusaur PSA 9
-        ['c5',  ['Vintage','Graded']], // Gyarados PSA 9
-        ['c5',  ['Vintage','Graded']],
-        ['c20', ['Modern','Graded']],  // Espeon VMAX PSA 10
-        ['c6',  ['Vintage','Graded']], // Alakazam PSA 9
-        ['c18', ['Modern','Graded']],  // Lugia V PSA 10
-        ['c18', ['Modern','Graded']],
-        ['c8',  ['Vintage','Graded']], // Snorlax PSA 9
-        ['c14', ['Modern','Graded']],  // Leafeon VMAX PSA 10
-        ['c9',  ['Vintage','Graded']], // Dark Charizard PSA 9
-        ['c9',  ['Vintage','Graded']],
-        ['c15', ['Modern','Graded']],  // Glaceon VMAX PSA 10
-        ['c16', ['Modern','Graded']]   // Dragonite V PSA 10
-      ];
-
-  const built = picks.map(([cid, tags]) => {
-    const card = CATALOG.find(c => c.id === cid);
-    return buildIntent(card, card.condition, tags);
-  });
-  return shuffle(built);
-}
-
-/* ----------------------------------------------------------
-   STATE
----------------------------------------------------------- */
 const state = {
   role: 'vendor',
   mode: 'buy', // 'buy' | 'sell'
